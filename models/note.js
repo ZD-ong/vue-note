@@ -1,14 +1,7 @@
-'use strict';
-module.exports = (sequelize, DataTypes) => {
-  var note = sequelize.define('note', {
+export default (sequelize, DataTypes) => {
+  const Note = sequelize.define('Note', {
     title: DataTypes.STRING,
     content: DataTypes.TEXT
-  }, {
-    classMethods: {
-      associate: function(models) {
-        // associations can be defined here
-      }
-    }
-  });
-  return note;
-};
+  })
+  return Note;
+}

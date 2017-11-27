@@ -92,13 +92,16 @@ npm install --save sqlite3
 npm install --save sequelize
 ```
 
-```
-node_modules/.bin/sequelize model:generate --name User --attributes username:string,encryptPassword:string
 
-node_modules/.bin/sequelize model:generate --name notebook --attributes title:string
 
-node_modules/.bin/sequelize model:generate --name User --attributes username:string,encryptPassword:string
+增加 seed
+
 ```
+node_modules/.bin/sequelize seed:generate --name demo-user
+
+```
+
+
 
 
 ## 后端接口
