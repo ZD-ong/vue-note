@@ -81,6 +81,25 @@ npm install --save-dev mocha chai request
 npm test
 ```
 
+### 模型与数据库
+
+```
+npm install --save-dev sequelize-cli
+
+./node_modules/.bin/sequelize init
+
+npm install --save sqlite3
+npm install --save sequelize
+```
+
+```
+node_modules/.bin/sequelize model:generate --name User --attributes username:string,encryptPassword:string
+
+node_modules/.bin/sequelize model:generate --name notebook --attributes title:string
+
+node_modules/.bin/sequelize model:generate --name User --attributes username:string,encryptPassword:string
+```
+
 
 ## 后端接口
 ### 登录
@@ -118,3 +137,34 @@ POST /notebooks/:notebookID/notes
 
 ### 更新指定笔记本下指定笔记的信息
 PATCH /notebooks/:notebookID/notes/:noteID
+
+## 数据库
+
+user 表
+
+|  字段  | 类型 | 解释 |
+| ----  | ---- | ---- |
+| username | String |用户名|
+| encryptPassword |  String | 密码加密后的值 |
+
+
+
+notebook 表
+| 字段 | 类型 | 解释 |
+| ---- | ---- | ---- |
+| title | String | 笔记本标题|
+
+
+note 表
+
+| 字段 | 类型 | 解释 |
+| ---- | ---- | ---- |
+| title | String | 笔记标题|
+| content | Text | 笔记内容 |
+
+
+
+
+
+
+
