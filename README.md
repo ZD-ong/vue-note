@@ -1,4 +1,86 @@
 # vue-note
+## 操作步骤
+### 1. 初始化项目
+```
+npm install -g express-generator
+express vue-note
+cd vue-note
+npm install
+```
+
+### 2. 环境和工具配置
+生成 eslint 配置文件
+```
+npm install -g eslint
+eslint --init
+```
+
+配置 ES6环境
+
+```
+npm install --save-dev babel-cli babel-preset-env
+```
+创建 .babelrc
+```
+{
+  "presets": ["env"]
+}
+```
+
+安装 onchange 模块，每次更改后端文件会实现自动重启
+```
+npm install --save-dev onchange
+```
+
+修改 package.json
+
+```
+  "scripts": {
+    "start": "babel-node ./bin/www",
+    "dev": "onchange \"./**/*.js\" -- npm start "
+  },
+```
+
+### 3. 单元测试
+
+```
+npm install --save-dev mocha chai request
+```
+
+创建文件
+
+```
+- ...
+- app.js
+- tests
+  |---- models
+  |---- routes
+     |---- auth.js
+     |---- notebooks.js
+```
+
+执行
+
+```
+./node_modules/.bin/mocha tests/**/*.js
+```
+
+把命令加入到 package.json
+
+```
+  "scripts": {
+    "start": "babel-node ./bin/www",
+    "dev": "onchange \"./models/*.js\" \"./routes/*.js\" -- npm start ",
+    "test": "./node_modules/.bin/mocha tests/**/*.js"
+  }
+```
+
+执行
+
+```
+npm test
+```
+
 
 ## 后端接口
 ### 登录
