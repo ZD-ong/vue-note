@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "start": "babel-node ./bin/www",
-    "dev": "onchange \"./models/*.js\" \"./routes/*.js\" -- npm start ",
-    "test": "./node_modules/.bin/mocha tests/**/*.js"
+    "devserver": "onchange \"./models/*.js\" \"./routes/*.js\" \"./helper/*.js\" -- npm start ",
+    "testserver": "NODE_ENV=test onchange \"./models/*.js\" \"./routes/*.js\" \"./helper/*.js\" -- npm start ",
+    "test": "NODE_ENV=test mocha --compilers js:babel-core/register tests/**/*.js"
   },
   "dependencies": {
     "body-parser": "~1.18.2",
@@ -16,6 +17,7 @@
     "morgan": "~1.9.0",
     "sequelize": "^4.23.1",
     "serve-favicon": "~2.4.5",
+    "sha.js": "^2.4.9",
     "sqlite3": "^3.1.13"
   },
   "devDependencies": {

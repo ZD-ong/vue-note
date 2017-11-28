@@ -92,7 +92,21 @@ npm install --save sqlite3
 npm install --save sequelize
 ```
 
+生成模型
+```
+node_modules/.bin/sequelize model:generate --name User --attributes username:string,encryptPassword:string
 
+node_modules/.bin/sequelize model:generate --name notebook --attributes title:string
+
+node_modules/.bin/sequelize model:generate --name note --attributes title:string,content:text
+
+```
+
+执行创建文件
+
+```
+node_modules/.bin/sequelize db:migrate
+```
 
 增加 seed
 
