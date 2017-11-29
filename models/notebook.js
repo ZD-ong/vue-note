@@ -1,4 +1,5 @@
-export default (sequelize, DataTypes) => {
+import {randomId} from '../helper/util'
+export default (sequelize, DataTypes, Foreign) => {
   const Notebook = sequelize.define('Notebook', {
     title: DataTypes.STRING
   })

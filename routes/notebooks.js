@@ -1,8 +1,9 @@
 import express from 'express'
-import {checkNotebook} from '../helper/check'
-import model from '../models'
+import {checkNotebook, checkNote} from '../helper/check'
+import {model} from '../models'
 const router = express.Router()
 
+//获取笔记本列表
 router.get('/', (req, res) => {
   model.Notebook.findAll()
     .then(notebooks=>{
@@ -10,6 +11,7 @@ router.get('/', (req, res) => {
     })
 })
 
+//创建笔记本
 router.post('/', checkNotebook, (req, res) =>{
   let title = req.body.title
   model.Notebook.create({title}).then(val=>{
@@ -17,6 +19,7 @@ router.post('/', checkNotebook, (req, res) =>{
   })
 })
 
+//修改笔记本标题
 router.patch('/:notebookID', checkNotebook, (req, res) =>{
   let title = req.body.title
   model.Notebook.update({title:title},{where: {id: req.params.notebookID}})
@@ -28,6 +31,7 @@ router.patch('/:notebookID', checkNotebook, (req, res) =>{
     })
 })
 
+//删除笔记本
 router.delete('/:notebookID', (req, res) =>{
   model.Notebook.destroy({where: {id: req.params.notebookID}})
     .then(affectRow => {
@@ -38,20 +42,54 @@ router.delete('/:notebookID', (req, res) =>{
     })
 })
 
+//获取笔记本下的笔记列表
 router.get('/:notebookID/notes', (req, res) => {
-  res.send('get all notes in :notebookID')
+  model.Notebook.findById(req.params.notebookID)
+    .then(notebook=>{
+      console.log(notebook)
+      if(notebook === null){
+        return res.status(400).send({msg: '笔记本不存在'})
+      }
+      notebook.getNotes().then(notes=>{
+        res.send({data: notes})
+      })
+    })
 })
 
+//删除笔记本下的笔记
 router.delete('/:notebookID/notes/:noteID', (req, res) => {
-  res.send('get :noteID in :notebookID')
+  model.Note.destroy({where: {id: req.params.noteID}})
+    .then(affectRow=>{
+      console.log(affectRow)
+      if(affectRow === 0){
+        return res.status(400).send({msg: '笔记不存在'})
+      }
+      res.send({msg: '删除成功'})
+    })
 })
 
-router.post('/:notebookID/notes', (req, res) => {
-  res.send('create :noteID in :notebookID')
+//创建笔记
+router.post('/:notebookID/notes', checkNote, (req, res) => {
+  let [title, content] = [req.body.title, req.body.content]
+  model.Notebook.findById(req.params.notebookID)
+    .then(notebook=>{
+      model.Note.create({title, content}).then(note=>{
+        notebook.addNote(note)
+        res.send({data: note})
+      })
+    })
 })
 
-router.patch('/:notebookID/notes/:noteID', (req, res) => {
-  res.send('pudate :noteID in :notebookID')
+//修改笔记
+router.patch('/:notebookID/notes/:noteID', checkNote, (req, res) => {
+  let [title, content] = [req.body.title, req.body.content]
+  model.Notebook.update({title, content},{where: {id: req.params.noteID}})
+    .then(([affectRow])=>{
+      if(affectRow === 0){
+        return res.status(400).send({msg: '笔记不存在'})
+      }
+      res.send({msg: '修改成功'})
+    })
 })
 
 

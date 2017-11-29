@@ -25,3 +25,14 @@ export function checkNotebook(req, res, next){
     next()
   }
 }
+
+export function checkNote(req, res, next){
+  let [title = '', content = ''] = [req.body.title, req.body.content]
+  if(title.trim() === '' || title.length > 30){
+    res.status(400).send({msg: '笔记标题不能为空，且不超过30个字符'})
+  }else if(content.trim() === '' || content.length > 8000){
+    res.status(400).send({msg: '笔记内容不能为空，且不超过8000个字符'})
+  }else {
+    next()
+  }
+}

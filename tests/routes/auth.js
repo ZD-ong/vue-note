@@ -1,12 +1,14 @@
 import request from 'request'
 import {expect}  from 'chai'
-import model from '../../models'
+import {model, sequelize} from '../../models'
 
 const hash = require('../../helper/util')['hash']
 const url = 'http://localhost:3000'
 
-before(()=>{
-  model.User.destroy({where:{}})
+before((done)=>{
+  sequelize.sync({force: true}).then(()=>{
+    done()
+  })
 })
 
 describe('GET /auth/logout', ()=>{

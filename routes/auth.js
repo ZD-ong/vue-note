@@ -1,7 +1,8 @@
 import express from 'express'
 import {checkUsername, checkPassword} from '../helper/check'
 import {hash} from '../helper/util'
-import model from '../models'
+import {model} from '../models'
+
 
 const router = express.Router()
 

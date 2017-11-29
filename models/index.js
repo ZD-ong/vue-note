@@ -10,9 +10,15 @@ import User from './user'
 
 const model      = {}
 
-model.Note = Note(sequelize, Sequelize)
-model.Notebook = Notebook(sequelize, Sequelize)
-model.User = User(sequelize, Sequelize)
+
+
+model.Notebook = sequelize.import('./notebook')
+model.Note = sequelize.import('./note')
+model.User = sequelize.import('./user')
+
+model.Notebook.hasMany(model.Note, {foreignKey:'notebookId', targetKey:'id'})
 
 sequelize.sync()
-export default model
+
+
+export {model, sequelize} 
