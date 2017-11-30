@@ -1,8 +1,18 @@
 export default (sequelize, DataTypes, Foreign) => {
   const Note = sequelize.define('Note', {
-    title: DataTypes.STRING,
-    content: DataTypes.TEXT,
-    notebookId: DataTypes.INTEGER
+    title: {
+      type: DataTypes.STRING,
+      defaultValue: ''
+    },
+    content: {
+      type: DataTypes.STRING,
+      defaultValue: ''
+    },
+    notebookId: DataTypes.INTEGER,
+    isDelete: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    }
   },{
     indexes: [{
       fields: ['notebookId']

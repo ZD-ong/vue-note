@@ -10,7 +10,7 @@ const url = 'http://localhost:3000/notebooks'
 
 before(function(done) {
   console.log('start...')
-  sequelize.sync({force: true}).then(()=>{
+  model.Notebook.sync({force: true}).then(()=>{
     done()
   })
 })
@@ -49,7 +49,7 @@ describe(`POST /notebooks/`, ()=>{
       done()
     })
   })
-  it('创建笔记本参数太长应该报错', done=>{
+  it('创建笔记本标题太长应该报错', done=>{
     request.post(`${url}/`, {
       form: {
         title: '1234567890123456789012345678901'
@@ -59,7 +59,7 @@ describe(`POST /notebooks/`, ()=>{
       done()
     })
   })
-  it('创建笔记本参数正确应该创建成功', done=>{
+  it('创建笔记本标题正确应该创建成功', done=>{
     request.post(`${url}/`, {
       form: {
         title: '我的笔记1'
@@ -69,9 +69,6 @@ describe(`POST /notebooks/`, ()=>{
       done()
     })
   })
-})
-
-describe(`PATCH /:notebookID`, ()=>{
   it('获取笔记本列表数量应该为1', done=>{
     request.get(`${url}/`, function(err, response, body){
       expect(response.statusCode).to.equal(200)
@@ -101,6 +98,9 @@ describe(`PATCH /:notebookID`, ()=>{
       done()
     })
   })
+})
+
+describe(`PATCH /:notebookId`, ()=>{
   it('修改笔记本参数不正确应该报错', done=>{
     request.patch(`${url}/aa`, {
       form: {
@@ -123,7 +123,7 @@ describe(`PATCH /:notebookID`, ()=>{
   })
 })
 
-describe(`DELETE /:notebookID`, ()=>{
+describe(`DELETE /:notebookId`, ()=>{
   it('删除笔记本笔记本不存在应该报错', done=>{
     request.delete(`${url}/a`, (err, response, body)=>{
       expect(response.statusCode).to.equal(400)
@@ -145,72 +145,5 @@ describe(`DELETE /:notebookID`, ()=>{
   })
 })
 
-
-
-
-
-describe(`POST /notebooks/:notebookId/notes`, ()=>{
-
-  it('创建笔记1：参数不正确', done=>{
-    request.post(`${url}/2/notes`,{
-      form: {
-        content: '我是内容'
-      }
-    }, function(err, response, body){
-      expect(response.statusCode).to.equal(400)
-      done()
-    })
-  })
-
-  it('创建笔记2：参数正确', done=>{
-    request.post(`${url}/2/notes`,{
-      form: {
-        title: 'hello',
-        content: '我是内容'
-      }
-    }, function(err, response, body){
-      expect(response.statusCode).to.equal(200)
-      done()
-    })
-  })
-})
-
-describe(`GET /:notebookID/notes`, ()=>{
-  it('获取笔记列表参数正确应该成功', done=>{
-    request.get(`${url}/2/notes`, function(err, response, body){
-      expect(response.statusCode).to.equal(200)
-      done()
-    })
-  })
-  it('获取笔记列表笔记不存应该报错', done=>{
-    request.get(`${url}/3/notes`, function(err, response, body){
-      expect(response.statusCode).to.equal(400)
-      done()
-    })
-  })
-})
-
-describe(`DELETE /:notebookID`, ()=>{
-  it('删除笔记1：参数正确', done=>{
-    request.delete(`${url}/2/notes/1`, function(err, response, body){
-      expect(response.statusCode).to.equal(200)
-      done()
-    })
-  })
-})
-
-describe(`PATCH /:notebookID/notes/:noteID`, ()=>{
-  it('修改笔记：参数正确', done=>{
-    request.patch(`${url}/2/notes/2`, {
-      form: {
-        title: '饥人谷',
-        content: '来学习吧'
-      }
-    },function(err, response, body){
-      expect(response.statusCode).to.equal(200)
-      done()
-    })
-  })
-})
 
 

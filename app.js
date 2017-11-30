@@ -7,6 +7,7 @@ import bodyParser from 'body-parser'
 
 import auth from './routes/auth'
 import notebooks from './routes/notebooks'
+import notes from './routes/notes'
 
 
 let app = express()
@@ -27,6 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/auth', auth)
 app.use('/notebooks', notebooks)
+app.use('/notes', notes)
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

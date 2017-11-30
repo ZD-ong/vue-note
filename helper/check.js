@@ -28,10 +28,18 @@ export function checkNotebook(req, res, next){
 
 export function checkNote(req, res, next){
   let [title = '', content = ''] = [req.body.title, req.body.content]
-  if(title.trim() === '' || title.length > 30){
-    res.status(400).send({msg: '笔记标题不能为空，且不超过30个字符'})
-  }else if(content.trim() === '' || content.length > 8000){
-    res.status(400).send({msg: '笔记内容不能为空，且不超过8000个字符'})
+  if(title.length > 30){
+    res.status(400).send({msg: '笔记标题不能不超过30个字符'})
+  }else if(content.length > 8000){
+    res.status(400).send({msg: '笔记内容不超过8000个字符'})
+  }else {
+    next()
+  }
+}
+export function checkParam(req, res, next){
+  let notebookId = req.params.notebookId
+  if(!/^\d{1,20}$/.test(notebookId)){
+    res.status(400).send({msg: '缺少 notebookId 参数或者 notebookId 无效'})
   }else {
     next()
   }
