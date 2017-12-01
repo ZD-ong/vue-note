@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import NoteBook from '@/components/NoteBook'
+import Note from '@/components/Note'
 
 Vue.use(Router)
 
@@ -8,8 +9,15 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      redirect: '/notebook'
+    },
+    {
+      path: '/notebook',
+      component: NoteBook
+    },
+    {
+      path: '/note',
+      component: Note
     }
   ]
 })
