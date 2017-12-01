@@ -3,7 +3,6 @@ import {checkUsername, checkPassword} from '../helper/check'
 import {hash} from '../helper/util'
 import {model} from '../models'
 
-
 const router = express.Router()
 
 // 新建用户
@@ -12,6 +11,7 @@ router.post('/register', checkUsername, checkPassword, (req, res, next) => {
   let username = req.body.username
   let password = req.body.password
 
+  console.log(model)
   model.User.findOrCreate({where: {username}, defaults: {encryptPassword: hash(password)}})
     .spread((user, created)=>{
       if(!created){
@@ -22,7 +22,15 @@ router.post('/register', checkUsername, checkPassword, (req, res, next) => {
 
 })
 
+
+router.get('/', (req, res, next) => {
+  model.User.findAll().then(users=>{
+    res.send({data: users})
+  })
+})
+
 router.get('/logout', (req, res, next) => {
+  req.session.destroy()
   res.send('logout')
 })
 
@@ -37,6 +45,7 @@ router.post('/login', checkUsername, checkPassword, (req, res, next) => {
       if(user.encryptPassword !== hash(password)){
         return res.status(400).send({msg:'密码不正确'})
       }
+      req.session.user = user
       res.send({msg: '登录成功', data: {username: user.username}})
     })
 })
