@@ -23,7 +23,6 @@
 </script>
 
 <style lang="less" scoped>
-@import '//at.alicdn.com/t/font_496303_pzywja5g26l59udi.css';
 
 #sidebar {
   width: 56px;

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import NotebookList from '@/components/NotebookList'
-import NoteSidebar from '@/components/NoteSidebar'
+import Note from '@/components/Note'
 import NoteEmpty from '@/components/NoteEmpty'
 import NoteDetail from '@/components/NoteDetail'
 
@@ -16,7 +16,7 @@ export default new Router({
     },
     {
       path: '/notebook/:notebookId',
-      component: NoteSidebar,
+      component: Note,
       children: [
         {
           path: '',
@@ -30,7 +30,7 @@ export default new Router({
     },
     {
       path: '/trash',
-      component: NoteSidebar,
+      component: Note,
       children: [
         {
           path: '',

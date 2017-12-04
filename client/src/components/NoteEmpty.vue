@@ -1,3 +1,3 @@
 <template>
-  <p>  empty</p>
+  <p>  </p>
 </template>
