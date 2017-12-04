@@ -1,3 +1,3 @@
 <template>
-  <h2>Note</h2>
+  <p> note detail</p>
 </template>

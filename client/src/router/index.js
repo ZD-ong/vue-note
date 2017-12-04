@@ -1,23 +1,46 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import NoteBook from '@/components/NoteBook'
-import Note from '@/components/Note'
+import NotebookList from '@/components/NotebookList'
+import NoteSidebar from '@/components/NoteSidebar'
+import NoteEmpty from '@/components/NoteEmpty'
+import NoteDetail from '@/components/NoteDetail'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
-      path: '/',
-      redirect: '/notebook'
+      path: '/notebooks',
+      alias: '/',
+      component: NotebookList
     },
     {
-      path: '/notebook',
-      component: NoteBook
+      path: '/notebook/:notebookId',
+      component: NoteSidebar,
+      children: [
+        {
+          path: '',
+          component: NoteEmpty
+        },
+        {
+          path: 'note/:noteId',
+          component: NoteDetail
+        }
+      ]
     },
     {
-      path: '/note',
-      component: Note
+      path: '/trash',
+      component: NoteSidebar,
+      children: [
+        {
+          path: '',
+          component: NoteEmpty
+        },
+        {
+          path: ':noteId',
+          component: NoteDetail
+        }
+      ]
     }
   ]
 })

@@ -7,7 +7,7 @@
 
 <script>
 
-import sidebar from '@/components/SideBar'
+import sidebar from '@/components/Sidebar'
 
 export default {
   name: 'app',
@@ -18,12 +18,31 @@ export default {
 </script>
 
 <style>
-#app {
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #app {
+  height: 100%;
+}
+
+body {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  -moz-osx-font-smoothing: grayscale;  
+}
+
+
+a {
+  text-decoration: none;
+}
+
+#app {
+
+
+  display: flex;
+  align-items: stretch;
 }
 </style>

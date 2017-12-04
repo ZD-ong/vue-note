@@ -1,7 +1,50 @@
 <template>
   <div id="sidebar">
-   <h2>SideBar</h2>
-    <router-link to="/notebook">notebook</router-link>
-    <router-link to="/note">note</router-link> 
+    <avatar></avatar>
+    <div class="icons">
+      <router-link to="/notebook/1" title="笔记"><i class="iconfont icon-note"></i></router-link>
+      <router-link to="/notebooks" title="笔记本"><i class="iconfont icon-notebook"></i></router-link>
+      <router-link to="/trash" title="回收站"><i class="iconfont icon-trash"></i></router-link> 
+    </ul>
+  </div>
+    
+    
   </div>
 </template>
+
+<script>
+  import avatar from '@/components/Avatar'
+  
+  export default {
+    components: {
+      avatar
+    }
+  }
+</script>
+
+<style lang="less" scoped>
+@import '//at.alicdn.com/t/font_496303_pzywja5g26l59udi.css';
+
+#sidebar {
+  width: 56px;
+  text-align: center;
+  background-color: #2c333c;
+}
+
+.icons {
+  margin-top: 15px;
+
+  a {
+    padding: 6px 0;
+    display: block;
+  }
+
+  .router-link-active {
+    background-color: #5e6266;
+  }
+}
+
+.iconfont {
+  color: #fff;
+}
+</style>
