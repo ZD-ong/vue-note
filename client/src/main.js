@@ -4,10 +4,14 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
+// import { Message } from 'element-ui'
+
+// Vue.use( Message )
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
-new Vue({
+export default new Vue({
   el: '#app',
   router,
   template: '<App/>',

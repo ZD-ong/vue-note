@@ -8,7 +8,7 @@ import app from '../app'
 import debugServer from 'debug'
 import http from 'http'
 
-let debug = debugServer('vue-note:server')
+let debug = debugServer('vue-note')
 
 /**
  * Get port from environment and store in Express.
@@ -21,7 +21,14 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-let server = http.createServer(app);
+let server = http.createServer((req, res)=> {
+  debug('开发环境开启跨域访问')
+  if(debug.enabled){
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    res.setHeader('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS')
+  }
+  app(req, res)
+});
 
 /**
  * Listen on provided port, on all network interfaces.

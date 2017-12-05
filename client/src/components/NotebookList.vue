@@ -19,15 +19,33 @@
 </template>
 
 <script>
+
+  import {fullUrl, fetch} from '../helpers/fetch'
+  import {Message} from 'element-ui'
   
+  let URL = fullUrl({
+    notebooks: '/notebooks'
+  })
+
   export default {
     data(){
       return {
-        notebooks: [  
-          {title: '我的笔记本11', date: '12月3日'},
-          {title: '我的笔记本22', date: '12月3日'},
-          {title: '我的笔记本33', date: '12月3日'}
-         ]
+        notebooks: []
+      }
+    },
+
+    created(){
+      this.getNotebooks()
+    },
+
+    methods: {
+      getNotebooks(){
+        fetch(URL.notebooks)
+          .then(notebooks=>{
+            this.notebooks = notebooks
+          }).catch(err=>{
+            Message.error(err.msg)
+          })
       }
     }
   }

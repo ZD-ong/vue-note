@@ -12,15 +12,19 @@ function fullUrl(urlList) {
 
 function fetch(url, type='get', data = {}) {
   return new Promise((resolve, reject) => {
-    axios({
-      method: type,
+    let option = {
       url,
-      data
-    }).then((res)=>{
+      method: type
+    }
+    if(type.toLowerCase() === 'get'){
+      option.params = data
+    }else {
+      option.data = data
+    }
+    axios(option).then((res)=>{
       if(res.status === 200){
         resolve(res.data.data)
       }else{
-        console.log(res.data.msg)
         reject(res.data)
       }
     }).catch((err)=>{
