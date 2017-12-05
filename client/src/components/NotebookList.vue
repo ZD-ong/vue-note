@@ -30,13 +30,14 @@
           </div>
         </el-dialog>
         <div class="book-list">
-          <router-link v-for="notebook in notebooks" to="" class="notebook">
+          <router-link  v-for="notebook in notebooks" :to="`/notebook/${notebook.id}`" class="notebook">
             <div>
-              <span class="iconfont icon-notebook"></span> {{notebook.title}} <span>2</span><span class="action" @click="onEdit(notebook)">编辑</span>  
+              <span class="iconfont icon-notebook"></span> {{notebook.title}} <span>{{notebook.noteCounts}}</span><span class="action" @click="onEdit(notebook)">编辑</span>  
               <span class="action" @click="onDelete(notebook)">删除</span>  
               <span class="date">{{notebook.friendlyDate}}</span>              
             </div>
-          </router-link>
+          </router-link>            
+
         </div>       
       </div>
 
@@ -86,7 +87,7 @@
             this.notebooks = res.data.map(notebook=>{
               notebook.friendlyDate = friendlyDate(notebook.createdAt)
               return notebook
-            })
+            }).sort((book1, book2)=>book1.createdAt < book2.createdAt)
           }).catch(err=>{
             Message.error(err.msg)
           })
@@ -101,7 +102,7 @@
           .then((res)=>{
             Message('创建成功')
             res.data.friendlyDate = friendlyDate(res.data.createdAt)
-            this.notebooks.push(res.data)
+            this.notebooks.unshift(res.data)
             console.log()
             this.dialogCreateVisible = false
           }).catch((err)=>{
@@ -179,7 +180,7 @@
     line-height: 30px;
     border: 1px solid #ccc;
     border-radius: 3px;
-    padding: 3px;
+    padding: 3px 5px;
     outline: none;
   }
 

@@ -7,7 +7,16 @@ const router = express.Router()
 router.get('/', (req, res) => {
   model.Notebook.findAll()
     .then(notebooks=>{
-      res.send({data: notebooks})
+      let promiseArr = notebooks.map(notebook=>notebook.getNotes())
+      Promise.all(promiseArr).then(values=>{
+        let books = notebooks.map((notebook, idx)=>{
+          let book = notebook.get({plain: true})
+          book.noteCounts = values[idx].length
+          return book
+        })
+        res.send({data: books})
+      })
+      
     })
 })
 
