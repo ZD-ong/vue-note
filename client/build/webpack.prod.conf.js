@@ -10,6 +10,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 
+require('./mock.config').config({isDev: false})
+
 const env = require('../config/prod.env')
 
 const webpackConfig = merge(baseWebpackConfig, {

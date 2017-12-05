@@ -3,7 +3,7 @@
 </template>
 
 
-<style lang="less" scoped>
+<style scoped>
 
 a {
   display: inline-block;

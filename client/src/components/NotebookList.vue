@@ -6,17 +6,34 @@
     <main>
       <div class="layout">
         <h3>笔记本列表(3)</h3>
-        <ul>
-          <li><span class="iconfont icon-notebook"></span> 笔记本1 <span>2</span> <span class="date">12月3日</span></li>
-          <li><span class="iconfont icon-notebook"></span> 笔记本2 <span>10</span> <span class="date">11月10日</span></li>
-          <li><span class="iconfont icon-notebook"></span> 笔记本1 <span>0</span> <span class="date">9月5日</span></li>
-        </ul>       
+        <div class="book-list">
+          <router-link v-for="notebook in notebooks" to="">
+            <span class="iconfont icon-notebook"></span> {{notebook.title}} <span>2</span> <span class="date">{{notebook.date}}</span>
+          </router-link>
+        </div>       
       </div>
 
     </main>
 
   </div>
 </template>
+
+<script>
+  
+  export default {
+    data(){
+      return {
+        notebooks: [  
+          {title: '我的笔记本11', date: '12月3日'},
+          {title: '我的笔记本22', date: '12月3日'},
+          {title: '我的笔记本33', date: '12月3日'}
+         ]
+      }
+    }
+  }
+
+</script>
+
 
 <style scoped>
   .detail {
@@ -43,16 +60,13 @@
     margin: 0 auto;
   }
 
-  ul, li {
-    list-style: none;
-  }
 
   main h3{
     font-size: 12px;
     color: #000;
   }
 
-  main ul {
+  main .book-list {
     margin-top: 10px;
     padding: 0 14px;
     font-size: 14px;
@@ -61,7 +75,7 @@
     border-radius: 4px;
     font-weight: bold;
   }
-  main ul span {
+  main .book-list span {
     font-size: 12px;
     font-weight: bold;
     color: #b3c0c8;
@@ -73,12 +87,13 @@
     color: #1687ea;
     margin-right: 4px;
   }
-  main li {
+  main a {
+    display: block;
     border-bottom: 1px solid #ebebeb;
     padding: 12px 0;
     cursor: pointer;
   }
-  main li:hover {
+  main a:hover {
     background-color: #f7fafd;
   }
 
