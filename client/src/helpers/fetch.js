@@ -1,41 +1,34 @@
 import axios from 'axios'
 
-let host = require('./host.config.js').host
+import hostConfig from './host.config.js'
 
-function fullUrl(urlList) {
-  let obj = {}
-  Object.keys(urlList).forEach(key => {
-    obj[key] = host + urlList[key]
-  })
-  return obj
-}
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
+axios.defaults.baseURL = hostConfig.host
 
-function fetch(url, type='get', data = {}) {
+export default function fetch(url, type='get', data = {}) {
   return new Promise((resolve, reject) => {
     let option = {
       url,
-      method: type
+      method: type,
+      validateStatus (status) {
+        return (status >= 200 && status < 300)|| status === 400
+      }
     }
     if(type.toLowerCase() === 'get'){
       option.params = data
     }else {
       option.data = data
     }
+    console.log(option)
     axios(option).then((res)=>{
       if(res.status === 200){
-        resolve(res.data.data)
+        resolve(res.data)
       }else{
         reject(res.data)
       }
-    }).catch((err)=>{
-      console.log('网络异常')
+    }).catch(function(err){
       reject({msg: '网络异常'})
     })
   })
 }
 
-
-export {
-  fullUrl,
-  fetch
-}
