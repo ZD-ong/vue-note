@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "debug=vue-note:server babel-node ./bin/www",
+    "start": "DEBUG=vue-note babel-node ./bin/www",
     "dev": "onchange \"./models/*.js\" \"./routes/*.js\" \"./helper/*.js\" -- npm start",
     "testserver": "NODE_ENV=test npm start ",
     "test": "NODE_ENV=test mocha --compilers js:babel-core/register tests/**/*.js"

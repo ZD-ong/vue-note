@@ -4,9 +4,12 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
-import { Message, Dialog } from 'element-ui'
+import { Message, Dialog, Dropdown, DropdownMenu, DropdownItem } from 'element-ui'
 
 Vue.use(Dialog)
+Vue.use(Dropdown)
+Vue.use(DropdownMenu)
+Vue.use(DropdownItem)
 
 Vue.config.productionTip = false
 

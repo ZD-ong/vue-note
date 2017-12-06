@@ -32,8 +32,8 @@
         <div class="book-list">
           <router-link  v-for="notebook in notebooks" :to="`/notebook/${notebook.id}`" class="notebook">
             <div>
-              <span class="iconfont icon-notebook"></span> {{notebook.title}} <span>{{notebook.noteCounts}}</span><span class="action" @click="onEdit(notebook)">编辑</span>  
-              <span class="action" @click="onDelete(notebook)">删除</span>  
+              <span class="iconfont icon-notebook"></span> {{notebook.title}} <span>{{notebook.noteCounts}}</span><span class="action" @click.stop.prevent="onEdit(notebook)">编辑</span>  
+              <span class="action" @click.stop.prevent="onDelete(notebook)">删除</span>  
               <span class="date">{{notebook.friendlyDate}}</span>              
             </div>
           </router-link>            

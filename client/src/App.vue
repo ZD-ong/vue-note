@@ -52,6 +52,8 @@ ul, li{
   border-radius: 3px;
   padding: 2px 6px;
   background-color: #fff;
+  cursor: pointer;
+  display: inline-block;
 }
 
 
