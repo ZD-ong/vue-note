@@ -11,6 +11,10 @@ import sidebar from '@/components/Sidebar.vue'
 
 export default {
   name: 'app',
+  created(){
+    console.log('create app')
+    this.$store.dispatch('getNotebooks')
+  },
   components: {
     sidebar
   }

@@ -49,17 +49,8 @@
 <script>
 
   import fetch from '../helpers/fetch'
-  import { friendlyDate } from '../helpers/util'
   import { mapActions, mapState } from 'vuex'
   import { Message, Dialog } from 'element-ui'
-  console.log(friendlyDate)
-  
-  let URL = {
-    get: '/notebooks',
-    create: '/notebooks',
-    update: '/notebooks/:id',
-    delete: '/notebooks/:id'
-  }
 
   export default {
     data(){
@@ -75,12 +66,11 @@
         errorMsgVisibile: false
       }
     },
-    created(){
-      this.getNotebooks()
-    },
+    // created(){
+    //   this.getNotebooks()
+    // },
     computed: mapState([
-      'notebooks',
-
+      'notebooks'
       ]),
 
     methods: {

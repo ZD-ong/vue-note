@@ -11,10 +11,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     notebooks: [],
-    curNotebook: {
-      id: '',
-      title: ''
-    },
+    curNotebook: null,
     notes: [],
     currentNote: {
       id: '',
@@ -37,6 +34,10 @@ export default new Vuex.Store({
     },
     deleteNotebook(state, payload){
       state.notebooks = state.notebooks.filter(notebook=> notebook.id != payload.notebookId)
+    },
+
+    setCurrentBook(state, payload){
+      state.curNotebook = payload.notebook
     }
   },
 
@@ -45,6 +46,9 @@ export default new Vuex.Store({
       return notebookApi.getAll()
         .then(notebooks=>{
           commit('getNotebooks', {notebooks})
+          if(notebooks.length > 0) {
+            commit('setCurrentBook', {notebook: notebooks[0]})
+          }
         })
     },
     addNotebook({commit}, payload) {
@@ -60,6 +64,7 @@ export default new Vuex.Store({
         })
     },
     deleteNotebook({commit}, payload) {
+      console.log(payload.notebookId)
       notebookApi.deleteNotebook(payload.notebookId)
         .then(()=>{
           commit('deleteNotebook', {notebookId: payload.notebookId})
