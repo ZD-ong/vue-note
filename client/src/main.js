@@ -2,6 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
+import store from './store'
 import router from './router'
 
 import { Message, Dialog, Dropdown, DropdownMenu, DropdownItem } from 'element-ui'
@@ -17,6 +18,7 @@ Vue.config.productionTip = false
 export default new Vue({
   el: '#app',
   router,
+  store,
   template: '<App/>',
   components: { App }
 })

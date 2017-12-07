@@ -16,8 +16,9 @@
     "marked": "^0.3.7",
     "save": "^2.3.1",
     "vue": "^2.5.2",
-    "vue-editor-markdown": "^1.0.0",
-    "vue-router": "^3.0.1"
+    "vue-editor-markdown2": "^1.0.1",
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

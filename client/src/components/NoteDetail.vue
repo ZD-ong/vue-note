@@ -8,7 +8,7 @@
 </template>
 
 <script>
-  import VueEditorMarkdown from 'vue-editor-markdown';
+  import VueEditorMarkdown from 'vue-editor-markdown2';
   import bus from '../helpers/bus'
 
   export default {
@@ -40,10 +40,6 @@
     beforeRouteUpdate(to, from, next){
       bus.$emit('getNote', to.params.noteId)
       next()      
-    },
-    mounted(){
-      this.editorWidth =  getComputedStyle(document.querySelector('.note-content')).width
-      this.editorHeight = getComputedStyle(document.querySelector('.note-content')).height
     }
   }
 </script>
