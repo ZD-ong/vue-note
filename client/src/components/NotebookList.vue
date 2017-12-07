@@ -7,7 +7,7 @@
         <p class="error-msg" v-show="errorMsgVisibile">{{form.errorMsg}}</p>
         <div slot="footer" class="dialog-footer">
           <a class="btn" @click="dialogCreateVisible = false">取消</a>
-          <a class="btn" type="primary" @click="createNotebook">创建</a>
+          <a class="btn" type="primary" @click="add">创建</a>
         </div>
       </el-dialog>
     </header>
@@ -19,14 +19,14 @@
           <p class="error-msg" v-show="errorMsgVisibile">{{form.errorMsg}}</p>
           <div slot="footer" class="dialog-footer">
             <a class="btn" @click="dialogEditVisible = false">取消</a>
-            <a class="btn" type="primary" @click="editNotebook">确定</a>
+            <a class="btn" type="primary" @click="update">确定</a>
           </div>
         </el-dialog>
         <el-dialog title="删除笔记" :visible.sync="dialogDeleteVisible">
           <p> 确认要删除笔记本吗</p>
           <div slot="footer" class="dialog-footer">
             <a class="btn" @click="dialogDeleteVisible = false">取消</a>
-            <a class="btn" type="primary" @click="deleteNotebook">确定</a>
+            <a class="btn" type="primary" @click="deleteBook">确定</a>
           </div>
         </el-dialog>
         <div class="book-list">
@@ -50,6 +50,7 @@
 
   import fetch from '../helpers/fetch'
   import { friendlyDate } from '../helpers/util'
+  import { mapActions, mapState } from 'vuex'
   import { Message, Dialog } from 'element-ui'
   console.log(friendlyDate)
   
@@ -63,7 +64,6 @@
   export default {
     data(){
       return {
-        notebooks: [],
         form: {
           title: '',
           id: '',
@@ -75,65 +75,56 @@
         errorMsgVisibile: false
       }
     },
-
     created(){
       this.getNotebooks()
     },
+    computed: mapState([
+      'notebooks',
+
+      ]),
 
     methods: {
-      getNotebooks(){
-        fetch(URL.get)
-          .then(res=>{
-            this.notebooks = res.data.map(notebook=>{
-              notebook.friendlyDate = friendlyDate(notebook.createdAt)
-              return notebook
-            }).sort((book1, book2)=>book1.createdAt < book2.createdAt)
-          }).catch(err=>{
-            Message.error(err.msg)
-          })
-      },
-      createNotebook(){
+      ...mapActions([
+        'getNotebooks',
+        'addNotebook',
+        'updateNotebook',
+        'deleteNotebook'
+      ]),
+
+      add(){
         if(this.form.title.trim() === '') {
           this.form.errorMsg = '笔记本名不能为空'
           this.errorMsgVisibile = true
           return
         }
-        fetch(URL.create, 'post', {title: this.form.title})
-          .then((res)=>{
-            Message('创建成功')
-            res.data.friendlyDate = friendlyDate(res.data.createdAt)
-            this.notebooks.unshift(res.data)
-            console.log()
+        this.addNotebook({title: this.form.title})
+          .then(()=>{
+            Message.success('创建成功')
             this.dialogCreateVisible = false
-          }).catch((err)=>{
-            Message.error(err.msg)
           })
       },
-      editNotebook(){
+
+      update(){
         if(this.form.title.trim() === '') {
           this.form.errorMsg = '笔记本名不能为空'
           this.errorMsgVisibile = true
           return
         }
-        fetch(URL.update.replace(':id', this.form.id), 'patch', {title: this.form.title})
-          .then(res=>{
-            Message('修改成功')
+        this.updateNotebook({notebookId: this.form.id, title: this.form.title})
+          .then(()=>{
             this.dialogEditVisible = false
-            this.notebooks.find(notebook=>notebook.id == this.form.id)
-                .title = this.form.title
-          }).catch((err)=>{
-            Message.error(err.msg)
-            this.dialogDeleteVisible = false
+          })
+          .catch((err)=>{
+            this.dialogEditVisible = false
           })
       },
-      deleteNotebook(){
-        fetch(URL.delete.replace(':id', this.form.id), 'delete')
-          .then(res=>{
-            Message('删除成功')
-            this.notebooks = this.notebooks.filter(notebook=>notebook.id !== this.form.id)
+
+      deleteBook(){
+        this.deleteNotebook({notebookId: this.form.id})
+          .then(()=>{
+            Message.success('删除成功')
             this.dialogDeleteVisible = false
           }).catch(err=>{
-            Message.error(err.msg)
             this.dialogDeleteVisible = false
           })
       },
@@ -144,7 +135,6 @@
         this.dialogCreateVisible = true
       },
       onEdit(notebook){
-        console.log(notebook)
         this.form.title = notebook.title
         this.form.id = notebook.id
         this.dialogEditVisible = true
