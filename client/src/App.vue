@@ -41,6 +41,7 @@ body {
 
 a {
   text-decoration: none;
+  color: #444;
 }
 
 ul, li{

@@ -15,8 +15,11 @@
     </div>
     <ul class="notes">
       <li v-for="note in notes">
-        <span class="date">{{note.friendlyDate}}</span>
-        <span class="title">{{note.title}}</span>
+        <router-link :to="`/notebook/${notebook.id}/note/${note.id}`">
+          <span class="date">{{note.friendlyDate}}</span>
+          <span class="title">{{note.title}}</span>          
+        </router-link>
+
       </li>
     </ul>
   </div>
@@ -26,6 +29,7 @@
   import fetch from '../helpers/fetch'
   import { friendlyDate } from '../helpers/util'
   import { Message } from 'element-ui'
+  import bus from '../helpers/bus'
 
   let URL = {
     getNotes: '/notes/from/:notebookId',
@@ -47,7 +51,13 @@
     created(){
       this.getNotes()
       this.getNotebooks()
-      console.log(this.notebookId)
+      console.log('bind getNote')
+      bus.$on('getNote', noteId=>{
+        console.log('hear get Note...')
+        let note = this.notes.find(note=>note.id == noteId)
+        console.log('give Note...')
+        bus.$emit('giveNote', note)
+      })
     },
 
     methods: {
@@ -60,8 +70,12 @@
             }).sort((note1, note2)=>{
               return note1.createdAt < note2.createdAt
             })
+            if(this.notes.length > 0 && this.$route.params.noteId === undefined){
+              this.$router.replace({ path: `/notebook/${this.notebook.id}/note/${this.notes[0].id}` }) 
+            }
           }).catch(err=>{
-            Message.error(err.msg)
+            console.log(err)
+            Message.error(err.msg||'系统错误')
           })
       },
 
@@ -73,7 +87,7 @@
               return notebook
             }).sort((book1, book2)=>book1.createdAt < book2.createdAt)
 
-            this.notebook.title = this.notebooks.filter(notebook=>notebook.id == this.notebook.id)[0].title
+            this.notebook.title = this.notebooks.find(notebook=>notebook.id == this.notebook.id).title
           }).catch(err=>{
             Message.error(err.msg)
           })
@@ -81,8 +95,7 @@
 
       handleCommand(command){
         this.notebook.id = command
-        console.log(this.notebooks.filter(notebook=>notebook.id == this.notebook.id))
-        this.notebook.title = this.notebooks.filter(notebook=>notebook.id == command)[0].title
+        this.notebook.title = this.notebooks.find(notebook=>notebook.id == command).title
         this.getNotes()        
       }
     }
@@ -150,12 +163,21 @@
 
   .notes {
     li {
-      font-size: 12px;
-      padding: 4px 0;
-      display: flex;
-
+      
       &:nth-child(odd) {
         background-color: #f2f2f2;
+      }
+
+      a {
+        display: flex;
+        padding: 3px 0;
+        font-size: 12px;
+        border: 2px solid transparent;
+      }
+
+      .router-link-active {
+        border: 2px solid #81c0f3;
+        border-radius: 3px;
       }
 
       span {

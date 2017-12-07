@@ -19,7 +19,6 @@ export default function fetch(url, type='get', data = {}) {
     }else {
       option.data = data
     }
-    console.log(option)
     axios(option).then((res)=>{
       if(res.status === 200){
         resolve(res.data)
