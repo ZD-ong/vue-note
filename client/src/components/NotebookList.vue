@@ -66,12 +66,13 @@
         errorMsgVisibile: false
       }
     },
-    // created(){
-    //   this.getNotebooks()
-    // },
+    created(){
+      this.getNotebooks()
+    },
+
     computed: mapState([
       'notebooks'
-      ]),
+    ]),
 
     methods: {
       ...mapActions([

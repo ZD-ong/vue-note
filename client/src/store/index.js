@@ -11,14 +11,11 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     notebooks: [],
-    curNotebook: null,
     notes: [],
-    currentNote: {
-      id: '',
-      title: '',
-      content: ''
-    },
-    trashNotes: []
+    trashNotes: [],
+    curNotebook: {title: ''},
+    isCurNotebookInit: false,
+    curNote: {title: '', content: ''}
   },
 
   mutations: {
@@ -37,17 +34,38 @@ export default new Vuex.Store({
     },
 
     setCurrentBook(state, payload){
-      state.curNotebook = payload.notebook
-    }
+      let notebook = state.notebooks.find(notebook=>notebook.id == payload.notebookId)
+      state.curNotebook = notebook
+      state.isCurNotebookInit = true
+    },
+
+    getNotes(state, payload){
+      state.notes = payload.notes
+    },
+
+    addNote(state, payload){
+      state.notes.unshift(payload.note)
+    },
+    updateNote(state, payload){
+      let notebook = state.notes.find(note=>note.id == payload.noteId)
+      note.title = payload.title
+    },
+    deleteNote(state, payload){
+      state.notes = state.notes.filter(note=> note.id != payload.noteId)
+    },
+    setCurrentNote(state, payload){
+      let note = state.notes.find(note=>note.id == payload.noteId)
+      state.curNote = note
+    },
   },
 
   actions: {
-    getNotebooks({commit}) {
+    getNotebooks({commit, state}) {
       return notebookApi.getAll()
         .then(notebooks=>{
           commit('getNotebooks', {notebooks})
-          if(notebooks.length > 0) {
-            commit('setCurrentBook', {notebook: notebooks[0]})
+          if(notebooks.length > 0 && !state.isCurNotebookInit) {
+            commit('setCurrentBook', {notebookId: notebooks[0].id})
           }
         })
     },
@@ -69,11 +87,38 @@ export default new Vuex.Store({
         .then(()=>{
           commit('deleteNotebook', {notebookId: payload.notebookId})
         })
+    },
+
+
+    getNotes({commit, state}, payload) {
+      return noteApi.getAll({notebookId: payload.notebookId})
+        .then(notes=>{
+          commit('getNotes', {notes})
+          if(notes.length > 0) {
+            commit('setCurrentNote', {noteId: notes[0].id})
+          }
+        })
+    },
+    addNote({commit}, payload) {
+      notebookApi.addNote({title: payload.title})
+        .then(notebook=>{
+          commit('addNote', {notebook})
+        })
+    },
+    updateNote({commit}, payload) {
+      notebookApi.updateNote(payload.notebookId, {title: payload.title})
+        .then(()=>{
+          commit('updateNote', {notebookId: payload.notebookId , title: payload.title})
+        })
+    },
+    deleteNote({commit}, payload) {
+      console.log(payload.notebookId)
+      notebookApi.deleteNote(payload.notebookId)
+        .then(()=>{
+          commit('deleteNote', {notebookId: payload.notebookId})
+        })
     }
   },
 
-  getters: {
-
-  }
 
 })

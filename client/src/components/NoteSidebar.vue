@@ -3,7 +3,7 @@
     <span class="btn add-note">添加笔记</span>
     <el-dropdown @command="handleCommand" placement="bottom">
       <span class="el-dropdown-link">
-        {{notebook.title}} <i class="iconfont icon-down"></i>
+        {{curNotebook.title}} <i class="iconfont icon-down"></i>
       </span>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item v-for="notebook in notebooks" :command="notebook.id">{{notebook.title}}</el-dropdown-item>
@@ -15,7 +15,7 @@
     </div>
     <ul class="notes">
       <li v-for="note in notes">
-        <router-link :to="`/notebook/${notebook.id}/note/${note.id}`">
+        <router-link :to="`/notebook/${curNotebook.id}/note/${note.id}`">
           <span class="date">{{note.friendlyDate}}</span>
           <span class="title">{{note.title}}</span>          
         </router-link>
@@ -30,73 +30,42 @@
   import { friendlyDate } from '../helpers/util'
   import { Message } from 'element-ui'
   import bus from '../helpers/bus'
+  import { mapActions, mapState, mapMutations, mapGetters} from 'vuex'
 
-  let URL = {
-    getNotes: '/notes/from/:notebookId',
-    getNotebooks: '/notebooks'
-  }
 
   export default {
     data(){
       return {
-        notes: [],
-        notebooks: [],
-        notebook: {
-          id: this.$route.params.notebookId,
-          title: ''
-        }
       }
     },
 
-    created(){
-      this.getNotes()
-      this.getNotebooks()
-      console.log('bind getNote')
-      bus.$on('getNote', noteId=>{
-        console.log('hear get Note...')
-        let note = this.notes.find(note=>note.id == noteId)
-        console.log('give Note...')
-        bus.$emit('giveNote', note)
-      })
+    computed: {
+      ...mapState([
+        'notebooks',
+        'notes',
+        'curNotebook',
+        'curNote'
+      ])
     },
 
+    // watch: {
+    //   notebooks(){
+    //     this.setCurrentBook({notebookId: this.$route.params.notebookId})
+    //   }
+    // },
+
     methods: {
-      getNotes(){
-        fetch(URL.getNotes.replace(':notebookId', this.notebook.id))
-          .then(res=>{
-            this.notes = res.data.map(note=>{
-              note.friendlyDate = friendlyDate(note.createdAt)
-              return note
-            }).sort((note1, note2)=>{
-              return note1.createdAt < note2.createdAt
-            })
-            if(this.notes.length > 0 && this.$route.params.noteId === undefined){
-              this.$router.replace({ path: `/notebook/${this.notebook.id}/note/${this.notes[0].id}` }) 
-            }
-          }).catch(err=>{
-            console.log(err)
-            Message.error(err.msg||'系统错误')
-          })
-      },
+      ...mapActions([
+      ]),
+      ...mapMutations([
+        'setCurrentBook'
+        ]),
 
-      getNotebooks(){
-        fetch(URL.getNotebooks)
-          .then(res=>{
-            this.notebooks = res.data.map(notebook=>{
-              notebook.friendlyDate = friendlyDate(notebook.createdAt)
-              return notebook
-            }).sort((book1, book2)=>book1.createdAt < book2.createdAt)
 
-            this.notebook.title = this.notebooks.find(notebook=>notebook.id == this.notebook.id).title
-          }).catch(err=>{
-            Message.error(err.msg)
-          })
-      },
-
-      handleCommand(command){
-        this.notebook.id = command
-        this.notebook.title = this.notebooks.find(notebook=>notebook.id == command).title
-        this.getNotes()        
+      handleCommand(notebookId){
+        console.log('handleCommand', notebookId)
+        this.setCurrentBook({notebookId})
+        this.$router.replace({ path: `/notebook/${this.curNotebook.id}/` })      
       }
     }
   }

@@ -1,44 +1,48 @@
 <template>
   <div class="note-content">
-    <template v-if="isShowEditor">
-      <vue-editor-markdown v-model="note"></vue-editor-markdown>
-    </template>  
+    <vue-editor-markdown v-model="note"></vue-editor-markdown>
   </div>
 
 </template>
 
 <script>
-  import VueEditorMarkdown from 'vue-editor-markdown2';
-  import bus from '../helpers/bus'
+  import VueEditorMarkdown from 'vue-editor-markdown2'
+  import { mapActions, mapState, mapMutations, mapGetters} from 'vuex'
 
   export default {
     data(){
       return {
-        note: {markdown: '', html: ''},
-        isShowEditor: false
+        note: {markdown: '', html: ''}
       }
     },
     components: {
       VueEditorMarkdown
     },
+    computed: {
+      ...mapState([
+        'curNote'
+      ])
+    },
+    watch: {
+      curNote(note){
+        this.note.markdown = note && note.content
+      }
+    },
     methods: {
+      ...mapActions([
 
+      ]),
+      ...mapMutations([
+        'setCurrentNote'
+        ])
     },
-    created(){
-      bus.$on('giveNote', note=> {
-        console.log('get Note...')
-        console.log(note)
-        this.note.markdown = note.content
-        this.isShowEditor = true
-      })
-    },
-    beforeRouteEnter (to, from, next) {
-      console.log(to.params.noteId)
-      bus.$emit('getNote', to.params.noteId)
-      next()
+    created () {
+      this.setCurrentNote({noteId: this.$route.params.noteId})
+      this.note.markdown = this.curNote && this.curNote.content
     },
     beforeRouteUpdate(to, from, next){
-      bus.$emit('getNote', to.params.noteId)
+      console.log('update', to.params.noteId)
+      this.setCurrentNote({noteId: to.params.noteId})
       next()      
     }
   }
@@ -47,16 +51,15 @@
 <style lang="less" scoped>
 .note-content {
   flex: 1;
+  display: flex;
 
-  .vm-markdown {
+  #markdown {
+    height: auto;
+    border: none;
     border-radius: 0;
 
-    .vm-editor-menu {
-      border-radius: 0;
-    }
-
-    .content {
-      border: 0;
+    &.markdown-fullscreen{
+      height: 100%;
     }
   }
 }  

@@ -15,6 +15,10 @@ export default new Router({
       component: NotebookList
     },
     {
+      path: '/notebook',
+      component: Note
+    },
+    {
       path: '/notebook/:notebookId',
       component: Note,
       children: [
