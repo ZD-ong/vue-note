@@ -41,10 +41,14 @@ router.post('/to/:notebookId', checkNote, checkParam, (req, res) => {
 
 //修改笔记
 router.patch('/:noteId', checkNote, (req, res) => {
-  let [title, content] = [req.body.title, req.body.content]
-  console.log('修改笔记')
-  console.log(title, content)
-  model.Note.update({title, content},{where: {id: req.params.noteId}})
+  let options = {}
+  if(req.body.title!==undefined){
+    options.title = req.body.title
+  }
+  if(req.body.content !== undefined){
+    options.content = req.body.content
+  }
+  model.Note.update(options,{where: {id: req.params.noteId}})
     .then(([affectRow])=>{
       if(affectRow === 0){
         return res.status(400).send({msg: '笔记不存在'})

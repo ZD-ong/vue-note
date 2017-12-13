@@ -18,7 +18,8 @@ export default {
 </script>
 
 <style>
-@import '//at.alicdn.com/t/font_496303_ex5pbak1digdgqfr.css';
+@import '//at.alicdn.com/t/font_496303_40k5270e6xjn61or.css';
+@import url(./assets/css/github-markdown.css);
 
 * {
   box-sizing: border-box;
@@ -49,10 +50,12 @@ ul, li{
 }
 
 .btn {
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  padding: 2px 6px;
+  color: #666;
+  font-size: 12px;
+  padding: 2px 4px;
   background-color: #fff;
+  box-shadow: 0px 0px 2px 0px #ccc;
+  border: none;
   cursor: pointer;
   display: inline-block;
 }

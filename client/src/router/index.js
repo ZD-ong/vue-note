@@ -4,6 +4,7 @@ import NotebookList from '@/components/NotebookList'
 import Note from '@/components/Note'
 import NoteEmpty from '@/components/NoteEmpty'
 import NoteDetail from '@/components/NoteDetail'
+import Trash from '@/components/Trash'
 
 Vue.use(Router)
 
@@ -33,18 +34,11 @@ export default new Router({
       ]
     },
     {
+      path: '/trash/:noteId',
+      component: Trash
+    },{
       path: '/trash',
-      component: Note,
-      children: [
-        {
-          path: '',
-          component: NoteEmpty
-        },
-        {
-          path: ':noteId',
-          component: NoteDetail
-        }
-      ]
+      component: Trash
     }
   ]
 })

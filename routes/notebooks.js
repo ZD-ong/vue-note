@@ -44,13 +44,22 @@ router.patch('/:notebookId', checkNotebook, (req, res) =>{
 
 //删除笔记本
 router.delete('/:notebookId', (req, res) =>{
-  model.Notebook.destroy({where: {id: req.params.notebookId}})
-    .then(affectRow => {
-      if(affectRow === 0){
-        return res.status(400).send({msg: '笔记本不存在'})
+  model.Note.findAll({where: {notebookId: req.params.notebookId}})
+    .then(notes=>{
+      if(notes.length > 0){
+        res.status(400).send({msg: '笔记本不为空或者回收站中还有属于当前笔记本的笔记'})
+      } else {
+        model.Notebook.destroy({where: {id: req.params.notebookId}})
+          .then(affectRow => {
+            if(affectRow === 0){
+              return res.status(400).send({msg: '笔记本不存在'})
+            }
+            res.send({msg: '删除成功'})
+          })
       }
-      res.send({msg: '删除成功'})
+
     })
+
 })
 
 

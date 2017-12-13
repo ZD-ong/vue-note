@@ -1,5 +1,5 @@
 <template>
-  <div class="detail">
+  <div class="detail" id="note">
     <note-sidebar></note-sidebar>
     <router-view></router-view>  
   </div>
@@ -18,6 +18,7 @@
       ...mapState([
         'notebooks',
         'curNotebook',
+        'curNote',
         'isCurNotebookInit'
       ])
     },
@@ -27,26 +28,32 @@
         'getNotes'
       ]),
       ...mapMutations([
-        'setCurrentBook'
+        'setCurrentBook',
+        'setCurrentNote'
         ])
     },
     created(){
-      console.log('create')
+      let notebookId = this.$route.params.notebookId
+      let noteId = this.$route.params.noteId
+      console.log('created...')
       this.getNotebooks()
         .then(()=>{
-          let notebookId = this.$route.params.notebookId
-          if(notebookId){
-            console.log('has notebookId')
-            this.setCurrentBook({notebookId})
-            this.getNotes({notebookId})
-          }else{
-            console.log('has no notebookId')
-            if(!this.isCurNotebookInit){
-              this.setCurrentBook({notebookId: this.notebooks[0].id})
-            }
-            //
-            this.$router.replace({ path: `/notebook/${this.curNotebook.id}/` })  
-          }          
+          let payload = notebookId?{notebookId}:(this.curNotebook.id?{notebookId:this.curNotebook.id}:{})
+          this.setCurrentBook(payload)
+          return this.getNotes({notebookId: this.curNotebook.id})      
+        }).then(()=>{
+          this.setCurrentNote(noteId?{noteId}:{})
+        }).then(()=>{
+          let path = `/notebook/${this.curNotebook.id}`
+          if(this.curNote.id){
+            path += `/note/${this.curNote.id}`
+          }
+
+          if(!notebookId || !noteId){
+            this.$router.replace({path})
+            console.log('jump')
+          }
+          
         })
 
     },
@@ -54,22 +61,26 @@
     beforeRouteUpdate (to, from, next) {
       console.log('beforeRouteUpdate...')
       console.log(to, from)
-      if(to.params.notebookId){
-        this.getNotes({notebookId: to.params.notebookId})
-          .then(()=>{
-            next()
-          })
-      }else{
-        next()
-      }
-      
+      let notebookId = to.params.notebookId
+      let noteId = to.params.noteId
+      this.setCurrentBook(notebookId?{notebookId}:{})
+      this.getNotes({notebookId: this.curNotebook.id})
+        .then(()=>{
+          this.setCurrentNote(noteId?{noteId}:{})
+          if(!noteId && this.curNote.id){
+            let path = `/notebook/${this.curNotebook.id}/note/${this.curNote.id}`
+            this.$router.replace({path})
+          }
+          next()
+        }) 
+
     },
   }
 </script>
 
 <style scoped>
 
-.detail {
+#note {
   display: flex;
   align-items: stretch;
   background-color: #fff;

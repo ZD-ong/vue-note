@@ -14,7 +14,8 @@ export default {
       fetch(URL.GET)
         .then(res=>{
           res.data = res.data.map(notebook=>{
-            notebook.friendlyDate = friendlyDate(notebook.createdAt)
+            notebook.createdAtFriendly = friendlyDate(notebook.createdAt)
+            notebook.updatedAtFriendly = friendlyDate(notebook.updatedAt)
             return notebook
           }).sort((book1, book2)=>book1.createdAt < book2.createdAt)
           resolve(res.data)

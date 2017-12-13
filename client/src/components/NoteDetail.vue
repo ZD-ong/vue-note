@@ -1,67 +1,112 @@
 <template>
-  <div class="note-content">
-    <vue-editor-markdown v-model="note"></vue-editor-markdown>
+  <div class="note-detail">
+    <div class="note-bar">
+      <span> 创建日期: {{curNote.createdAtFriendly}}</span>
+      <span> 更新日期: {{curNote.updatedAtFriendly}}</span>
+      <span> {{stateText}}</span>
+      <span class="iconfont icon-delete" @click="dialogDeleteVisible=true"></span>
+      <!-- <span class="iconfont icon-play" @click="onPlay"></span> -->
+      <span class="iconfont icon-fullscreen" @click="isPreview = !isPreview"></span>
+      <el-dialog title="删除笔记" :visible.sync="dialogDeleteVisible">
+        <p>确定删除笔记?</p>
+        <div slot="footer" class="dialog-footer">
+          <a class="btn" @click="dialogDeleteVisible = false">取消</a>
+          <a class="btn" type="primary" @click="onDelete">确定</a>
+        </div>
+      </el-dialog>
+    </div>
+    <div class="note-title">
+      <input type="text" :value="title" @input="updateTitle" placeholder="输入标题">
+    </div>
+    <div class="editor">
+      <textarea :value="content" @input="updateContent" v-show="!isPreview" placeholder=" 输入内容"></textarea>
+      <div class="preview markdown-body" v-html="compiledMarkdown" v-show="isPreview"></div>
+    </div>
   </div>
-
 </template>
 
 <script>
-  import VueEditorMarkdown from 'vue-editor-markdown2'
+  import marked from 'marked'
   import { mapActions, mapState, mapMutations, mapGetters} from 'vuex'
+  import _ from 'lodash'
+  import { Message } from 'element-ui'
 
   export default {
     data(){
       return {
-        note: {markdown: '', html: ''}
+        content: '',
+        title: '',
+
+        stateText: '未保存',
+
+        isPreview: false,
+        dialogDeleteVisible: false
       }
     },
-    components: {
-      VueEditorMarkdown
+    created(){
+      this.content = this.curNote.content
+      this.title = this.curNote.title
     },
     computed: {
       ...mapState([
         'curNote'
-      ])
+      ]),
+      compiledMarkdown() {
+        return marked(this.content, { sanitize: true })
+      }
     },
     watch: {
       curNote(note){
-        this.note.markdown = note && note.content
+        this.content = note.content
+        this.title = note.title
       }
     },
     methods: {
       ...mapActions([
-
+        'updateNote',
+        'deleteNote'
       ]),
-      ...mapMutations([
-        'setCurrentNote'
-        ])
-    },
-    created () {
-      this.setCurrentNote({noteId: this.$route.params.noteId})
-      this.note.markdown = this.curNote && this.curNote.content
-    },
-    beforeRouteUpdate(to, from, next){
-      console.log('update', to.params.noteId)
-      this.setCurrentNote({noteId: to.params.noteId})
-      next()      
+      
+      updateContent: _.debounce(function(e){
+          this.content = e.target.value
+          this.updateNote({ 
+            noteId: this.curNote.id,
+            content: e.target.value
+          }).then(()=>{
+            this.stateText = '已保存'
+          })  
+        }, 1300),
+
+      updateTitle: _.debounce(function(e){
+        this.title = e.target.value
+        this.curNote.title = e.target.value
+        this.updateNote({ 
+          noteId: this.curNote.id,
+          title: e.target.value
+        }).then(()=>{
+            this.stateText = '已保存'
+          })            
+      }, 1300),
+
+      onDelete(){
+        this.deleteNote({noteId: this.curNote.id})
+          .then(()=>{
+            Message.success('删除成功')
+            this.dialogDeleteVisible = false
+          }).catch((e)=>{
+            Message.error(e.message)
+            this.dialogDeleteVisible = false
+          })
+      },
+
+      // onPlay(){
+
+      // }
     }
   }
 </script>
 
-<style lang="less" scoped>
-.note-content {
-  flex: 1;
-  display: flex;
-
-  #markdown {
-    height: auto;
-    border: none;
-    border-radius: 0;
-
-    &.markdown-fullscreen{
-      height: 100%;
-    }
-  }
-}  
+<style lang="less">
+  @import url(../assets/css/note-detail.less);
 
 </style>

@@ -23,3 +23,13 @@ export function friendlyDate(dateStr){
   }
   return str
 }
+
+export function throttle(fn, delay) {
+    var timer = null
+    return function(...args){
+        clearTimeout(timer)
+        timer = setTimeout(()=>{ 
+            fn(...args)
+        }, delay)
+    }
+}
