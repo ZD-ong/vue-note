@@ -15,7 +15,16 @@ export default new Vuex.Store({
     trashNotes: [],
     curNotebook: {title: ''},
     isCurNotebookInit: false,
-    curNote: {title: '', content: ''}
+    curNote: {title: '', content: ''},
+    user: {
+      username: ''
+    }
+  },
+
+  getters: {
+    slug: state => {
+      return state.user.username[0]||''
+    }
   },
 
   mutations: {
@@ -92,6 +101,13 @@ export default new Vuex.Store({
       console.log('filter...')
       console.log(payload)
       state.trashNotes = state.trashNotes.filter(note=> note.id != payload.noteId)
+    },
+
+    setUser(state, payload){
+      state.user = payload.user
+    },
+    unsetUser(state, payload){
+      state.user = {username: ''}
     }
 
   },
@@ -186,7 +202,9 @@ export default new Vuex.Store({
     }
 
 
-  },
+  }
+
+
 
 
 })

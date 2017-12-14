@@ -1,19 +1,27 @@
 
+export function checkLogin(req, res, next) {
+  if(req.session.user){
+    next()
+  }else {
+    res.status(400).send({msg: '登登录后才能操作'})
+  }
+}
+
 export function checkUsername(req, res, next){
   let [username = ''] = [req.body.username]
-  if(/[a-zA-Z_0-9]{4,16}/.test(username)){
+  if(/^[\w\u4e00-\u9fa5]{1,15}$/.test(username)){
     next()
   }else{
-    res.status(400).send({msg: '用户名长度4到16个字符，只能是字母数字下划线'})
+    res.status(400).send({msg: '用户名长度1到15个字符，只能是字母数字下划线中文'})
   }
 }
 
 export function checkPassword(req, res, next){
   let [password = ''] = [req.body.password]
-  if(/[a-zA-Z_0-9]{6,16}/.test(password)){
+  if(/^.{6,16}$/.test(password)){
     next()
   }else{
-    res.status(400).send({msg:'密码长度6到16个字符，只能是字母数字下划线'})
+    res.status(400).send({msg:'密码长度6到16个字符'})
   }
 }
 

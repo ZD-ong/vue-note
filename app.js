@@ -7,7 +7,7 @@ import bodyParser from 'body-parser'
 import session  from 'express-session'
 
 import {index, auth, notebooks, notes} from './routes'
-
+import {checkLogin} from './helper/check'
 
 let app = express()
 
@@ -23,13 +23,13 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'client/dist')))
 
-app.use(session({ secret: 'hello world', cookie: { maxAge: 60000 }}))
+app.use(session({ secret: 'hello world', cookie: { maxAge: 6000000 }}))
 
 
-app.use('/', index)
+app.use('/',  index)
 app.use('/auth', auth)
-app.use('/notebooks', notebooks)
-app.use('/notes', notes)
+app.use('/notebooks', checkLogin, notebooks)
+app.use('/notes', checkLogin, notes)
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

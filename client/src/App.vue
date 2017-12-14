@@ -18,7 +18,7 @@ export default {
 </script>
 
 <style>
-@import '//at.alicdn.com/t/font_496303_40k5270e6xjn61or.css';
+@import '//at.alicdn.com/t/font_496303_kqrjhri8l25d0a4i.css';
 @import url(./assets/css/github-markdown.css);
 
 * {

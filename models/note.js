@@ -9,6 +9,7 @@ export default (sequelize, DataTypes, Foreign) => {
       defaultValue: ''
     },
     notebookId: DataTypes.INTEGER,
+    userId: DataTypes.INTEGER,
     isDelete: {
       type: DataTypes.BOOLEAN,
       defaultValue: false

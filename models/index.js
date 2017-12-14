@@ -17,8 +17,10 @@ model.Note = sequelize.import('./note')
 model.User = sequelize.import('./user')
 
 model.Notebook.hasMany(model.Note, {foreignKey:'notebookId', targetKey:'id'})
+model.User.hasMany(model.Notebook, {foreignKey:'userId', targetKey:'id'})
+model.User.hasMany(model.Note, {foreignKey:'userId', targetKey:'id'})
 
-sequelize.sync()
+sequelize.sync(/*{force: true}*/)
 
 
 export {model, sequelize} 

@@ -37,7 +37,7 @@
         content: '',
         title: '',
 
-        stateText: '未保存',
+        stateText: '',
 
         isPreview: false,
         dialogDeleteVisible: false
@@ -75,7 +75,7 @@
           }).then(()=>{
             this.stateText = '已保存'
           })  
-        }, 1300),
+        }, 300),
 
       updateTitle: _.debounce(function(e){
         this.title = e.target.value
@@ -86,7 +86,7 @@
         }).then(()=>{
             this.stateText = '已保存'
           })            
-      }, 1300),
+      }, 300),
 
       onDelete(){
         this.deleteNote({noteId: this.curNote.id})

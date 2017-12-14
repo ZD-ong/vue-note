@@ -1,11 +1,27 @@
 <template>
-  <a href="#">h</a>
+  <span :title="user.username">{{slug}}</span>
 </template>
 
+<script>
+  import { mapActions, mapState, mapMutations, mapGetters} from 'vuex'
+
+  export default {
+    computed: {
+      ...mapState(['user']),
+      ...mapGetters(['slug'])
+    },
+    methods: {
+      ...mapMutations([
+        'setUser',
+        'unsetUser'
+      ]),
+    }
+  }
+</script>
 
 <style scoped>
 
-a {
+span {
   display: inline-block;
   width: 30px;
   height: 30px;

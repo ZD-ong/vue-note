@@ -13,6 +13,7 @@ Vue.use(DropdownMenu)
 Vue.use(DropdownItem)
 
 Vue.config.productionTip = false
+Vue.prototype.$message = Message
 
 /* eslint-disable no-new */
 export default new Vue({

@@ -12,26 +12,33 @@ router.post('/register', checkUsername, checkPassword, (req, res, next) => {
   let password = req.body.password
 
   console.log(model)
-  model.User.findOrCreate({where: {username}, defaults: {encryptPassword: hash(password)}})
-    .spread((user, created)=>{
+  model.User.findOrCreate({
+    where: {username}, 
+    defaults: {encryptPassword: hash(password)}
+  }).spread((user, created)=>{
       if(!created){
         return res.status(400).send({msg: '用户已存在'})
       }
-      res.send({msg: '创建成功', data: user})
+      let json = user.get({plain: true})
+      req.session.user = json
+      delete json.encryptPassword
+      res.send({msg: '创建成功', data: json})
     })
 
 })
 
 
 router.get('/', (req, res, next) => {
-  model.User.findAll().then(users=>{
-    res.send({data: users})
-  })
+  if(req.session.user){
+    res.send({isLogin: true, data: req.session.user})
+  }else {
+    res.send({isLogin: false})
+  }
 })
 
 router.get('/logout', (req, res, next) => {
   req.session.destroy()
-  res.send('logout')
+  res.send({msg: '注销成功'})
 })
 
 router.post('/login', checkUsername, checkPassword, (req, res, next) => {
@@ -46,7 +53,8 @@ router.post('/login', checkUsername, checkPassword, (req, res, next) => {
         return res.status(400).send({msg:'密码不正确'})
       }
       req.session.user = user
-      res.send({msg: '登录成功', data: {username: user.username}})
+      delete user.encryptPassword
+      res.send({msg: '登录成功', data: user})
     })
 })
 

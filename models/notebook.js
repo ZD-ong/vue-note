@@ -4,7 +4,8 @@ export default (sequelize, DataTypes, Foreign) => {
     title: {
       type: DataTypes.STRING,
       defaultValue: ''
-    }
+    },
+    userId: DataTypes.INTEGER
   })
   return Notebook
 }

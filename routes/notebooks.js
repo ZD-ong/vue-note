@@ -5,7 +5,7 @@ const router = express.Router()
 
 //获取笔记本列表
 router.get('/', (req, res) => {
-  model.Notebook.findAll()
+  model.Notebook.findAll({where:{userId: req.session.user.id}})
     .then(notebooks=>{
       let promiseArr = notebooks.map(notebook=>notebook.getNotes())
       Promise.all(promiseArr).then(values=>{
@@ -23,7 +23,7 @@ router.get('/', (req, res) => {
 //创建笔记本
 router.post('/', checkNotebook, (req, res) =>{
   let title = req.body.title
-  model.Notebook.create({title}).then(val=>{
+  model.Notebook.create({title, userId: req.session.user.id}).then(val=>{
     console.log('create success')
     console.log(val)
     res.send({msg: '创建笔记本成功', data: val})
@@ -33,7 +33,7 @@ router.post('/', checkNotebook, (req, res) =>{
 //修改笔记本标题
 router.patch('/:notebookId', checkNotebook, (req, res) =>{
   let title = req.body.title
-  model.Notebook.update({title:title},{where: {id: req.params.notebookId}})
+  model.Notebook.update({title:title},{where: {id: req.params.notebookId, userId: req.session.user.id}})
     .then(([affectRow])=>{
       if(affectRow === 0){
         return res.status(400).send({msg: '笔记本不存在'})
@@ -44,12 +44,12 @@ router.patch('/:notebookId', checkNotebook, (req, res) =>{
 
 //删除笔记本
 router.delete('/:notebookId', (req, res) =>{
-  model.Note.findAll({where: {notebookId: req.params.notebookId}})
+  model.Note.findAll({where: {notebookId: req.params.notebookId, userId: req.session.user.id}})
     .then(notes=>{
       if(notes.length > 0){
         res.status(400).send({msg: '笔记本不为空或者回收站中还有属于当前笔记本的笔记'})
       } else {
-        model.Notebook.destroy({where: {id: req.params.notebookId}})
+        model.Notebook.destroy({where: {id: req.params.notebookId, userId: req.session.user.id}})
           .then(affectRow => {
             if(affectRow === 0){
               return res.status(400).send({msg: '笔记本不存在'})

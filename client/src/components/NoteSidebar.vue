@@ -10,8 +10,8 @@
       </el-dropdown-menu>
     </el-dropdown>
     <div class="menu">
-      <div @click="sortBy('time')">更新时间 <i class="iconfont icon-down"></i></div>
-      <div @click="sortBy('title')">标题 </div>
+      <div>更新时间</div>
+      <div>标题</div>
     </div>
     <ul class="notes">
       <li v-for="note in notes">
@@ -63,17 +63,6 @@
           }).catch(err=>{
             Message.error('创建笔记失败')
           })
-      },
-
-      sortBy(type){
-        if(type === 'time'){
-          this.notes = this.notes.reverse()
-        }else if(type === 'title'){
-          this.notes = this.notes.sort((note1, note2)=>{
-            return note1.title > note2.title
-          })
-        }
-        
       }
     }
   }

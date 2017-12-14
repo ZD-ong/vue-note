@@ -5,11 +5,16 @@ import Note from '@/components/Note'
 import NoteEmpty from '@/components/NoteEmpty'
 import NoteDetail from '@/components/NoteDetail'
 import Trash from '@/components/Trash'
+import Login from '@/components/Login'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
+    {
+      path: '/login',
+      component: Login
+    },
     {
       path: '/notebooks',
       alias: '/',
